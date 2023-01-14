@@ -2,10 +2,31 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <vector>
+#include "CourseProject1.h"
 
 
 using namespace std;
 
+int readFile(int k[], string fname ,int arraySize)
+{
+    
+
+    int i = 0;
+    ofstream ifs;
+    ifs.open(fname, ios::out); // създава текстов файл за четене
+    if (ifs.fail()) {
+        cout << "Error opening file: " << fname << "!\n";
+        return -1; // при грешка
+    }
+   
+    for (int i = 0; i < arraySize; i++) {
+        ifs << k[i] << endl;
+    }
+    ifs.close();
+    return 1; //при коректно изпълнение
+}
+//D:\fle.txt
 int main() {
     int choice;
     string fileName;
@@ -15,6 +36,8 @@ int main() {
     int newArray[100];
     int arraySize = 0;
     int newArraySize = 0;
+    PopulateArray(array);
+    PopulateArray(newArray);
 
     // Print menu
     cout << "Enter 1 to enter data from keyboard" << endl;
@@ -43,16 +66,19 @@ int main() {
             cout << "Unable to open file" << endl;
             return 1;
         }
-
         // Read data from file
         while (inputFile) {
-
+            
             std::getline(inputFile, input);
+            
+            array [arraySize] = stoi (input);
+            arraySize++;
 
-            cout << "Data read from file:" << input << endl;
         }
-
         // Close file
+        arraySize--;
+        for (int i = 0; i < arraySize; i++ )cout << "Data read from file:" << array[i] << endl;
+
         inputFile.close();
     }
     else {
@@ -62,16 +88,18 @@ int main() {
     }
 
     // Get array from user
-    cout << "Enter elements of the array, up to 100, enter -1 to stop input: " << endl;
-    int element;
-    while (cin >> element && element != -1) {
-        array[arraySize++] = element;
+    if (choice == 1 ) {
+        cout << "Enter elements of the array, up to 100, enter -1 to stop input: " << endl;
+        int element;
+        while (cin >> element && element != -1) {
+            array[arraySize++] = element;
+        }
+        cout << "Array entered: ";
+        for (int i = 0; i < arraySize; i++) {
+            cout << array[i] << " ";
+        }
+        cout << endl;
     }
-    cout << "Array entered: ";
-    for (int i = 0; i < arraySize; i++) {
-        cout << array[i] << " ";
-    }
-    cout << endl;
 
     // Store negative numbers and even numbers in new array
     for (int i = 0; i < arraySize; i++) {
@@ -90,26 +118,21 @@ int main() {
     }
     cout << endl;
 
+    cout << "Do you want to save the data in file ? [y/n]";
+    cin >> input;
+    if (input == "y") 
+    {
+        cout << "Where do you want the file?";
+        cin >> input;
+        readFile(newArray, input , newArraySize);
+    }
+
+
     system("pause");
     return 0;
 }
 
-/*int readFile(int x[], int* nx, string fname)
+void PopulateArray(int  array[100])
 {
-    *nx = 0;
-    int i = 0;
-    ifstream ifs;
-    ifs.open(fname, ios::in); // отваря текстов файл за четене
-    if (ifs.fail()) {
-        cout << "Error opening file: " << fname << "!\n";
-        return -1; // при грешка
-    } 
-    while (!ifs.eof())
-    {
-        ifs >> *(x + i); // запис на число в масива
-        i++;
-    }
-    *nx = i - 1;
-    ifs.close();
-    return 1; //при коректно изпълнение
-} */
+    for (int i = 0; i < 100; i++) array[i] = -1;
+}
